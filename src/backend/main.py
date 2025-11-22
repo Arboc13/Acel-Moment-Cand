@@ -51,7 +51,9 @@ def root():
 
 # --- Login ---
 @app.post("/login")
-def login(email: str, password: str):
+def login(login_data: dict):
+    email = login_data["cnp"]
+    password = login_data["parola"]
     try:
         user = get_user_by_email(email)
         if not user or user.password != password:
