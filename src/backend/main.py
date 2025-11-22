@@ -9,6 +9,8 @@ from crud import (
     create_medical_history, get_user_medical_history
 )
 from database import create_db_and_tables, engine
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 SQLModel.metadata.create_all(engine)
