@@ -8,11 +8,11 @@ with Session(engine) as session:
 
     # --- USERS ---
     users = [
-        User(name="Alice", email="alice@example.com", password="1234"),
-        User(name="Bob", email="bob@example.com", password="1234"),
-        User(name="Charlie", email="charlie@example.com", password="1234"),
-        User(name="David", email="david@example.com", password="1234"),
-        User(name="Eve", email="eve@example.com", password="1234"),
+        User(name="Alice", email="alice@example.com", password="1234", cnp = "1"),
+        User(name="Bob", email="bob@example.com", password="5678", cnp = "1"),
+        User(name="Charlie", email="charlie@example.com", password="9013", cnp = "1"),
+        User(name="David", email="david@example.com", password="7113", cnp = "1"),
+        User(name="Eve", email="eve@example.com", password="4321", cnp = "1"),
     ]
     session.add_all(users)
     session.commit()

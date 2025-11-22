@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
-from sqlmodel import Session
+from sqlmodel import Session, SQLModel
 from models import User, Doctor, Appointment, Prescription, MedicalHistory
 from crud import (
     get_user_by_email, get_user, get_doctors, get_doctor,
@@ -8,26 +8,10 @@ from crud import (
     create_prescription, get_user_prescriptions,
     create_medical_history, get_user_medical_history
 )
-from database import create_db_and_tables
-from fastapi.middleware.cors import CORSMiddleware
-
+from database import create_db_and_tables, engine
 
 app = FastAPI()
-
-# ----- CORS SETTINGS -----
-origins = [
-    "http://localhost:5173",  # your React frontend
-    "http://localhost:3000",  # optional: another local frontend port
-]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,   # allow requests from these URLs
-    allow_credentials=True,
-    allow_methods=["*"],     # allow GET, POST, PUT, DELETE, etc.
-    allow_headers=["*"],     # allow any headers
-)
-# --------------------------
+SQLModel.metadata.create_all(engine)
 
 # --- Startup event ---
 @app.on_event("startup")
