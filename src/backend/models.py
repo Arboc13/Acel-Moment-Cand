@@ -9,11 +9,18 @@ class User(SQLModel, table=True):
     name: str
     email: str
     password: str  # only for hackathon
+    cnp: str
 
 class Doctor(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str
     specialization: str
+
+class DoctorAccount(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    name: str
+    email: str
+    password: str
 
 class Appointment(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
@@ -34,5 +41,4 @@ class MedicalHistory(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     user_id: int
     description: str
-    prescription: Prescription
     timestamp: datetime = Field(default_factory=datetime.utcnow)
