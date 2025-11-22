@@ -1,0 +1,14 @@
+# Dependencies
+/node_modules
+
+# Angular output folder
+/dist
+
+# Compiled Python files (FastAPI backend)
+/src/backend/__pycache__/
+*.pyc
+
+# Logs and environment files
+*.log
+.env
+.DS_Store

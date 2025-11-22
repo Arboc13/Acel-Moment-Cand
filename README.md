@@ -1,9 +1,10 @@
-<<<<<<< HEAD
 # Hackathon
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.0.
 
 ## Development server
+
+starting to fucking code eeeeeyyyyayyy
 
 To start a local development server, run:
 
@@ -58,7 +59,3 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
-=======
-# Acel-Moment-Cand
-Acel moment cand... Hermes Hackathon
->>>>>>> d8ea5935a31507d889c5d970cf2286d74e89344d
