@@ -34,4 +34,5 @@ class MedicalHistory(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     user_id: int
     description: str
+    prescription: Prescription
     timestamp: datetime = Field(default_factory=datetime.utcnow)
