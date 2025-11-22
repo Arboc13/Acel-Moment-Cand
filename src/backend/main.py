@@ -13,6 +13,22 @@ from database import create_db_and_tables, engine
 app = FastAPI()
 SQLModel.metadata.create_all(engine)
 
+
+# ----- CORS SETTINGS -----
+origins = [
+    "http://localhost:5173",  # your React frontend
+    "http://localhost:3000",  # optional: another local frontend port
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,   # allow requests from these URLs
+    allow_credentials=True,
+    allow_methods=["*"],     # allow GET, POST, PUT, DELETE, etc.
+    allow_headers=["*"],     # allow any headers
+)
+# --------------------------
+
 # --- Startup event ---
 @app.on_event("startup")
 def on_startup():
