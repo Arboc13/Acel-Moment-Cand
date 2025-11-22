@@ -9,8 +9,25 @@ from crud import (
     create_medical_history, get_user_medical_history
 )
 from database import create_db_and_tables
+from fastapi.middleware.cors import CORSMiddleware
+
 
 app = FastAPI()
+
+# ----- CORS SETTINGS -----
+origins = [
+    "http://localhost:5173",  # your React frontend
+    "http://localhost:3000",  # optional: another local frontend port
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,   # allow requests from these URLs
+    allow_credentials=True,
+    allow_methods=["*"],     # allow GET, POST, PUT, DELETE, etc.
+    allow_headers=["*"],     # allow any headers
+)
+# --------------------------
 
 # --- Startup event ---
 @app.on_event("startup")
