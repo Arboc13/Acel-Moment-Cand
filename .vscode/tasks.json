@@ -37,6 +37,15 @@
           }
         }
       }
+    },
+    {
+      "type": "typescript",
+      "tsconfig": "tsconfig.app.json",
+      "problemMatcher": [
+        "$tsc"
+      ],
+      "group": "build",
+      "label": "tsc: build - tsconfig.app.json"
     }
   ]
 }
