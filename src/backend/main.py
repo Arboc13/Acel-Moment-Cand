@@ -1,6 +1,11 @@
-from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import JSONResponse
-from sqlmodel import Session
+# main.py
+from fastapi import FastAPI
+from sqlmodel import Session, select
+
+from database import create_db_and_tables
+from models import User
+from crud import get_users, create_user
+from fastapi import HTTPException
 from models import User, Doctor, Appointment, Prescription, MedicalHistory
 from crud import (
     get_user_by_email, get_user, get_doctors, get_doctor,
@@ -8,124 +13,101 @@ from crud import (
     create_prescription, get_user_prescriptions,
     create_medical_history, get_user_medical_history
 )
-from database import create_db_and_tables
+
+
+
 
 app = FastAPI()
 
-# --- Startup event ---
+@app.post("/login")
+def login(email: str, password: str):
+    user = get_user_by_email(email)
+    if not user or user.password != password:
+        raise HTTPException(status_code=401, detail="Invalid email or password")
+    return user
+
+
+
 @app.on_event("startup")
 def on_startup():
     create_db_and_tables()
 
-# --- Global exception handler ---
-@app.exception_handler(Exception)
-async def global_exception_handler(request: Request, exc: Exception):
-    # Log exception (optional)
-    print(f"Error: {exc}")
-    return JSONResponse(
-        status_code=500,
-        content={"detail": f"Unexpected error: {str(exc)}"}
-    )
-
-# --- Root ---
 @app.get("/")
 def root():
     return {"message": "Backend is running!"}
 
-# --- Login ---
-@app.post("/login")
-def login(email: str, password: str):
-    try:
-        user = get_user_by_email(email)
-        if not user or user.password != password:
-            raise HTTPException(status_code=401, detail="Invalid email or password")
-        return user
-    except HTTPException:
-        raise
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Login failed: {str(e)}")
+# <------------------ User ------------------>
 
-# --- Users ---
+
+@app.get("/users")
+def list_users():
+    return get_users()
+
+@app.post("/users")
+def add_user(user: User):
+    return create_user(user)
+
+
 @app.get("/users/{user_id}")
 def get_user_endpoint(user_id: int):
-    try:
-        user = get_user(user_id)
-        if not user:
-            raise HTTPException(status_code=404, detail="User not found")
-        return user
-    except HTTPException:
-        raise
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Error retrieving user: {str(e)}")
+    user = get_user(user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
 
-# --- Doctors ---
+
+# <------------------ Doctor ------------------>
+
+
 @app.get("/doctors")
 def list_doctors():
-    try:
-        return get_doctors()
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Error retrieving doctors: {str(e)}")
+    return get_doctors()
 
 @app.get("/doctors/{doctor_id}")
 def get_doctor_endpoint(doctor_id: int):
-    try:
-        doctor = get_doctor(doctor_id)
-        if not doctor:
-            raise HTTPException(status_code=404, detail="Doctor not found")
-        return doctor
-    except HTTPException:
-        raise
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Error retrieving doctor: {str(e)}")
+    doctor = get_doctor(doctor_id)
+    if not doctor:
+        raise HTTPException(status_code=404, detail="Doctor not found")
+    return doctor
 
-# --- Appointments ---
+# <------------------ Appointments ------------------>
+
+
+
 @app.post("/appointments")
 def add_appointment(appointment: Appointment):
-    try:
-        return create_appointment(appointment)
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Could not create appointment: {str(e)}")
+    return create_appointment(appointment)
 
 @app.get("/appointments/user/{user_id}")
 def list_user_appointments(user_id: int):
-    try:
-        return get_user_appointments(user_id)
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Could not fetch user appointments: {str(e)}")
+    return get_user_appointments(user_id)
 
 @app.get("/appointments/doctor/{doctor_id}")
 def list_doctor_appointments(doctor_id: int):
-    try:
-        return get_doctor_appointments(doctor_id)
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Could not fetch doctor appointments: {str(e)}")
+    return get_doctor_appointments(doctor_id)
 
-# --- Prescriptions ---
+# <------------------ Prescriptions ------------------>
+
+
+
+
 @app.post("/prescriptions")
 def add_prescription(prescription: Prescription):
-    try:
-        return create_prescription(prescription)
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Could not create prescription: {str(e)}")
+    return create_prescription(prescription)
 
 @app.get("/prescriptions/user/{user_id}")
 def list_user_prescriptions(user_id: int):
-    try:
-        return get_user_prescriptions(user_id)
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Could not fetch user prescriptions: {str(e)}")
+    return get_user_prescriptions(user_id)
 
-# --- Medical History ---
+
+# <------------------ Medical History ------------------>
+
+
+
 @app.post("/medical_history")
 def add_medical_history(entry: MedicalHistory):
-    try:
-        return create_medical_history(entry)
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Could not create medical history entry: {str(e)}")
+    return create_medical_history(entry)
 
 @app.get("/medical_history/user/{user_id}")
 def list_medical_history(user_id: int):
-    try:
-        return get_user_medical_history(user_id)
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Could not fetch medical history: {str(e)}")
+    return get_user_medical_history(user_id)
