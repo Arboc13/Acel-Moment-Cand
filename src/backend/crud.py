@@ -1,6 +1,6 @@
 # crud.py
 from sqlmodel import Session, select
-from models import User, Doctor, Appointment, Prescription, MedicalHistory
+from models import User, Doctor, DoctorAccount, Appointment, Prescription, MedicalHistory
 from database import engine
 
 def get_users():
@@ -34,6 +34,18 @@ def get_doctors():
 def get_doctor(doctor_id: int):
     with Session(engine) as session:
         return session.get(Doctor, doctor_id)
+
+def get_doctor_account_by_email(email: str):
+    with Session(engine) as session:
+        statement = select(DoctorAccount).where(DoctorAccount.email == email)
+        return session.exec(statement).first
+
+def create_doctor_account(account: DoctorAccount):
+    with Session(engine) as session:
+        session.add(account)
+        session.commit()
+        session.refresh(account)
+        return account
 
 # <------------------ Appointment ------------------>
 
