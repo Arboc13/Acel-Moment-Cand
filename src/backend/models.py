@@ -7,7 +7,7 @@ from datetime import datetime
 class User(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str
-    email: str
+    cnp: str
     password: str  # only for hackathon
 
 class Doctor(SQLModel, table=True):
@@ -23,14 +23,14 @@ class DoctorAccount(SQLModel, table=True):
 
 class Appointment(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    user_id: int
+    patient_id: int
     doctor_id: int
     datetime: datetime
     status: str = "pending"
 
 class Prescription(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    user_id: int
+    patient_id: int
     doctor_id: int
     medication_name: str
     dosage: str
@@ -38,6 +38,6 @@ class Prescription(SQLModel, table=True):
 
 class MedicalHistory(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    user_id: int
+    patient_id: int
     description: str
     timestamp: datetime = Field(default_factory=datetime.utcnow)

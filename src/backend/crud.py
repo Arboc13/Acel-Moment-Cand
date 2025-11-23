@@ -16,14 +16,14 @@ def create_user(user: User):
 
 # <------------------ User ------------------>
 
-def get_user_by_email(email: str):
+def get_user_by_password_and_cnp(password: str, cnp: str):
     with Session(engine) as session:
-        statement = select(User).where(User.email == email)
+        statement = select(User).where(User.password == password and User.cnp == cnp)
         return session.exec(statement).first()
 
-def get_user(user_id: int):
+def get_user(patient_id: int):
     with Session(engine) as session:
-        return session.get(User, user_id)
+        return session.get(User, patient_id)
 
 # <------------------ Doctor ------------------>
 
@@ -57,9 +57,9 @@ def create_appointment(appointment: Appointment):
         session.refresh(appointment)
         return appointment
 
-def get_user_appointments(user_id: int):
+def get_user_appointments(patient_id: int):
     with Session(engine) as session:
-        statement = select(Appointment).where(Appointment.user_id == user_id)
+        statement = select(Appointment).where(Appointment.patient_id == patient_id)
         return session.exec(statement).all()
 
 def get_doctor_appointments(doctor_id: int):
@@ -77,9 +77,9 @@ def create_prescription(prescription: Prescription):
         session.refresh(prescription)
         return prescription
 
-def get_user_prescriptions(user_id: int):
+def get_user_prescriptions(patient_id: int):
     with Session(engine) as session:
-        statement = select(Prescription).where(Prescription.user_id == user_id)
+        statement = select(Prescription).where(Prescription.patient_id == patient_id)
         return session.exec(statement).all()
 
 # <------------------ Medical History ------------------>
@@ -92,8 +92,8 @@ def create_medical_history(entry: MedicalHistory):
         session.refresh(entry)
         return entry
 
-def get_user_medical_history(user_id: int):
+def get_user_medical_history(patient_id: int):
     with Session(engine) as session:
-        statement = select(MedicalHistory).where(MedicalHistory.user_id == user_id)
+        statement = select(MedicalHistory).where(MedicalHistory.patient_id == patient_id)
         return session.exec(statement).all()
 
