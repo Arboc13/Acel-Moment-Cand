@@ -60,7 +60,7 @@ def root():
 
 # -------------------- LOGIN --------------------
 @app.post("/login")
-def login(password: str, cnp: str):
+def login(data: dict):
 
     """
     email = credentials.get("cnp")
@@ -72,8 +72,7 @@ def login(password: str, cnp: str):
 
     return user
     """
-    data = User(password = password, cnp = cnp)
-    return get_user_by_password_and_cnp(password, cnp)
+    return get_user_by_password_and_cnp(data["parola"], data["cnp"])
 
 # -------------------- PATIENTS --------------------
 @app.get("/patients/{patient_id}")
