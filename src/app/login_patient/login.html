@@ -2,7 +2,7 @@
     <div class="login-card">
         <h2>Doctorul familiei tale</h2>
         
-        <form (ngSubmit)="onSubmit()">
+        <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
             <div class="form-group">
                 <label for="cnp">Cod Numeric Personal</label>
                 <input type="text" 
