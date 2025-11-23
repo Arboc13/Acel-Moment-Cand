@@ -1,0 +1,97 @@
+<div class="login-container">
+    <div class="login-card">
+        
+        <!-- Header Section (Styled like your h2) -->
+        <h2>HealthConnect</h2>
+        <div class="subtitle">
+            Logged in as: <strong>{{ userRole() | titlecase }}</strong>
+        </div>
+        
+        <!-- THE STACK OF BUTTONS -->
+        <div class="dashboard-stack">
+            
+            <!-- Dynamic Tabs -->
+            @for (tab of computedTabs(); track tab.id) {
+                <div class="form-group" style="margin-bottom: 0;">
+                    <button
+                        type="button"
+                        (click)="setActiveTab(tab.id)"
+                        class="login-button"
+                        [ngClass]="getTabClasses(tab.id)"
+                    >
+                        <span style="font-size: 1.2rem; margin-right: 10px;">{{ tab.icon }}</span>
+                        <span style="font-weight: bold; flex: 1; text-align: left;">{{ tab.name }}</span>
+                        <span style="opacity: 0.6;">➔</span>
+                    </button>
+                </div>
+            }
+
+            <!-- Settings Tab -->
+            <div class="form-group" style="margin-bottom: 0;">
+                <button
+                    type="button"
+                    (click)="setActiveTab('settings')"
+                    class="login-button"
+                    [ngClass]="getTabClasses('settings')"
+                >
+                    <span style="font-size: 1.2rem; margin-right: 10px;">⚙️</span>
+                    <span style="font-weight: bold; flex: 1; text-align: left;">Settings</span>
+                    <span style="opacity: 0.6;">➔</span>
+                </button>
+            </div>
+
+        </div>
+
+        <!-- CONTENT AREA (Shows up when a button is clicked) -->
+        @if (activeTab()) {
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 2px dashed #eee; animation: fadeIn 0.3s ease;">
+                
+                @switch (activeTab()) {
+                    @case ('history') {
+                        <div class="form-group">
+                            <label>{{ userRole() === 'patient' ? 'My Medical History' : 'Patient Records' }}</label>
+                            <p style="color: #666; font-size: 0.9rem; line-height: 1.5;">
+                                {{ userRole() === 'patient' 
+                                    ? 'Review your past appointments and diagnoses.' 
+                                    : 'Search comprehensive medical history.' }}
+                            </p>
+                            <div style="background: #f8f9fa; padding: 15px; border-radius: 4px; border: 1px solid #ddd; margin-top: 10px; color: #aaa; text-align: center;">
+                                Detailed History Content
+                            </div>
+                        </div>
+                    }
+                    @case ('schedule') {
+                        <div class="form-group">
+                            <label>Schedule Management</label>
+                            <p style="color: #666; font-size: 0.9rem; line-height: 1.5;">
+                                {{ userRole() === 'patient' 
+                                    ? "Book your next appointment with Dr. Smith." 
+                                    : "Manage your weekly consultation schedule." }}
+                            </p>
+                            <div style="background: #f8f9fa; padding: 15px; border-radius: 4px; border: 1px solid #ddd; margin-top: 10px; color: #aaa; text-align: center;">
+                                Calendar Interface
+                            </div>
+                        </div>
+                    }
+                    @case ('settings') {
+                        <div class="form-group">
+                            <label>Account Settings</label>
+                            <div style="margin-top: 10px;">
+                                <label style="font-size: 0.8rem;">Change Password</label>
+                                <input type="password" placeholder="New Password" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        }
+
+        <!-- Footer / Role Switcher -->
+        <div class="footer-links">
+            <button (click)="toggleRole()">
+                Switch to {{ userRole() === 'patient' ? 'Medic' : 'Patient' }} View
+            </button>
+        </div>
+
+    </div>
+</div>
