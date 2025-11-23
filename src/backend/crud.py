@@ -18,7 +18,9 @@ def create_user(user: User):
 
 def get_user_by_password_and_cnp(password: str, cnp: str):
     with Session(engine) as session:
-        statement = select(User).where(User.password == password and User.cnp == cnp)
+        statement = select(User).where(
+            User.password == password,
+            User.cnp == cnp)
         return session.exec(statement).first()
 
 def get_user(patient_id: int):
