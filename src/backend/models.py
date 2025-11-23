@@ -9,7 +9,6 @@ class User(SQLModel, table=True):
     name: str
     email: str
     password: str  # only for hackathon
-    cnp: str
 
 class Doctor(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)

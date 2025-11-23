@@ -5,6 +5,13 @@ import { MainScreenComponent } from './main-screen/main-screen';
   selector: 'app-root',
   standalone: true,
   imports: [MainScreenComponent],
+import { Component, signal } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { Login } from "./login_patient/login";
+
+@Component({
+  selector: 'app-root',
+  imports: [Login],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
