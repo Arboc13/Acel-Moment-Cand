@@ -21,23 +21,55 @@ from fastapi.middleware.cors import CORSMiddleware
 from schemas import AppointmentCreate, PrescriptionCreate, MedicalHistoryCreate
 from crud import get_user_by_password_and_cnp
 
-# -------------------- APP INIT --------------------
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
 app = FastAPI()
 
-# --- CORS Middleware MUST BE HERE ---
+# 💥 CORS Middleware MUST be here. 💥
 origins = [
     "http://localhost:4200", 
-    "http://127.0.0.1:4200" # Add this for extra safety!
+    "http://127.0.0.1:4200", 
 ]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["*"], 
+    allow_headers=["*"], 
 )
 
+@app.get("/check-alice")
+def check_data():
+    # Use Alice's known, hardcoded credentials to verify the DB works
+    alice = get_user_by_password_and_cnp(password="1234", cnp="1") 
+
+    if alice:
+        return {"status": "Fucking FOUND Alice", "name": alice.name, "pwd": alice.password}
+    else:
+        return {"status": "Alice is GONE. DB is empty or data is fucked."}
+
+# -------------------- LOGIN --------------------
+@app.post("/login")
+def login(data: dict):
+    
+    # Get the sanitized input data
+    cnp = data.get("cnp")
+    password = data.get("parola")
+    
+    # 1. Query the database using the helper function
+    # It returns EITHER a User object OR None
+    user = get_user_by_password_and_cnp(password="1234", cnp="1") # NOTE: Check the order of arguments here!
+    
+    # 2. Check ONLY if the user object was returned (or if it's None)
+    if not user:
+        # If the database didn't find a match, it's invalid credentials.
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+
+    # 3. Success! If we get here, the user is logged in.
+    return user
+    
 
 # -------------------- STARTUP --------------------
 @app.on_event("startup")
@@ -61,21 +93,7 @@ def root():
     return {"message": "Backend is running!"}
 
 
-# -------------------- LOGIN --------------------
-@app.post("/login")
-def login(data: dict):
 
-    """
-    email = credentials.get("cnp")
-    password = credentials.get("parola")
-
-    user = get_user_by_email(email)
-    if not user or user.password != password:
-        raise HTTPException(status_code=401, detail="Invalid credentials")
-
-    return user
-    """
-    return get_user_by_password_and_cnp(data["parola"], data["cnp"])
 
 # -------------------- PATIENTS --------------------
 @app.get("/patients/{patient_id}")
