@@ -1,46 +1,63 @@
 import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common'; 
-import { FormsModule } from '@angular/forms'; 
-import { HttpClient } from '@angular/common/http'; // 1. Necessary for backend communication
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http'; // 👈 Added HttpHeaders and HttpErrorResponse
+import { Router } from '@angular/router'; // 👈 IMPORT THE ROUTER
+import { FormsModule } from '@angular/forms'; // Assuming you still need this for the template
 
 @Component({
+  // Assuming a standard component setup; adjust as needed
   selector: 'app-login',
-  standalone: true, // IMPORTANT: Enable standalone mode
-  imports: [
-    CommonModule, 
-    FormsModule 
-  ], 
+  standalone: true, 
+  imports: [FormsModule], 
   templateUrl: './login.html',
-  styleUrl: './login.css',
+  styleUrl: './login.css' 
 })
-export class Login {
-  
-  // Inject the HTTP client service
-  private http = inject(HttpClient);
-  
-  // Define your backend endpoint URL (MAKE SURE THIS IS CORRECT!)
-  private readonly apiUrl = 'http://localhost:8000/login'; 
-  
-  // Data model to store the form input (CNP and Parola)
-  loginData = {
-    cnp: '',         
-    parola: ''      
-  };
+export class LoginComponent { // Renamed from 'Login' to 'LoginComponent' for Angular standards
+  
+  // Inject the HTTP client service
+  private http = inject(HttpClient);
+  private router = inject(Router); // 👈 Inject the Router Service
+  
+  // Define your backend endpoint URL
+  private readonly apiUrl = 'http://localhost:8000/login'; 
+  
+  // Data model to store the form input (CNP and Parola)
+  loginData = {
+    cnp: '',         
+    parola: ''      
+  };
 
-  // Method to send data to the backend
-  onSubmit() {
-    console.log('Sending data for Autentificare:', this.loginData);
+  errorMessage: string | null = null; // Variable to hold the error message
+  
+  // Method to send data to the backend
+  onSubmit() {
+    this.errorMessage = null; // Clear previous errors
     
-    // Send a POST request with the user's CNP and parola
-    this.http.post(this.apiUrl, this.loginData).subscribe({
-      next: (response) => {
-        console.log('Autentificare Reușită (Login Success)!', response);
-        // SUCCESS: You would handle authentication tokens and navigation here
-      },
-      error: (error) => {
-        console.error('Eroare Autentificare (Login Failed):', error);
-        // FAILURE: Display an error message to the user
-      }
-    });
-  }
+    // Explicitly set headers for robust communication
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
+    
+    console.log('Sending data for Autentificare:', this.loginData);
+    
+    // Send a POST request with the user's CNP and parola
+    this.http.post(this.apiUrl, this.loginData, { headers: headers }).subscribe({
+      next: (response: any) => {
+        console.log('Autentificare Reușită (Login Success)!', response);
+        // SUCCESS: Store the user data/token
+        localStorage.setItem('currentUser', JSON.stringify(response));
+        
+        // 💥 Navigate to the main page 💥
+        this.router.navigate(['/main-screen']); 
+      },
+      error: (rawError) => {
+        console.error('Eroare Autentificare (Login Failed):', rawError);
+        
+        // FAILURE: Extract and display the specific error (e.g., from 401)
+        if (rawError instanceof HttpErrorResponse) {
+             // Use the 'detail' field from your FastAPI error response
+             this.errorMessage = rawError.error.detail || `Eroare Autentificare: Status ${rawError.status}.`;
+        } else {
+             this.errorMessage = 'A apărut o eroare neașteptată.';
+        }
+      }
+    });
+  }
 }
