@@ -1,3 +1,10 @@
+import { Component } from '@angular/core';
+import { MainScreenComponent } from './main-screen/main-screen';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [MainScreenComponent],
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Login } from "./login_patient/login";
@@ -8,6 +15,6 @@ import { Login } from "./login_patient/login";
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App {
-  protected readonly title = signal('hackathon');
+// MAKE SURE THIS SAYS 'AppComponent'
+export class AppComponent { 
 }

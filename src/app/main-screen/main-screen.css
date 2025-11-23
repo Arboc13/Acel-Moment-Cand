@@ -1,0 +1,95 @@
+/* --- COPY OF YOUR LOGIN CSS --- */
+
+/* Basic Reset and Layout */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f4f7f6; /* Light gray background */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Card Styling */
+.login-card {
+    background: white;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    /* Increased max-width slightly so the dashboard buttons fit comfortably */
+    max-width: 500px; 
+    transition: all 0.3s ease;
+}
+
+.login-card h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 10px;
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.login-card .subtitle {
+    text-align: center;
+    color: #666;
+    margin-bottom: 30px;
+    font-size: 0.9rem;
+}
+
+/* Reusing your form-group styling for layout */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+/* Button Styling (Base style from your CSS) */
+.login-button {
+    width: 100%;
+    padding: 12px;
+    /* Note: Background color is overridden by Angular TS logic (Indigo/White) 
+       to show active state, but the shape matches your design */
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s, transform 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.footer-links {
+    text-align: center;
+    margin-top: 25px;
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+}
+
+.footer-links button {
+    background: none;
+    border: none;
+    color: #007bff;
+    text-decoration: none;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.footer-links button:hover {
+    text-decoration: underline;
+}
+
+/* Helper for the stack layout */
+.dashboard-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
